@@ -51,3 +51,27 @@ Used to assert something. If the result is not what you expected, the test fails
     isNotNull	     Must not be null
     throwsException	 Should throw error
     contains(x)	     Must contain value x
+
+## Provider test
+ProviderContainer দিয়ে test এ Riverpod provider isolate করে test করা যায়।
+
+setUp() এবং tearDown() দিয়ে test lifecycle clean রাখা হয়।
+
+প্রত্যেকটি method আলাদা test block এ check করছি।
+
+expect(container.read(toggleWidgetProvider), ...) দিয়ে state মান verify করছি।
+
+✅ Simple Explanation:
+Function	কাজ
+setUp()	Test run হওয়ার আগে প্রতি test এর জন্য prepare করে।
+tearDown()	Test শেষ হওয়ার পরে clean-up করে।
+
+✅ কেন দরকার হয়:
+১️⃣ যদি আপনার test code এর ভিতরে reusable initialization থাকে:
+➡️ বারবার duplicate না করে, setUp() এ রাখবেন।
+
+২️⃣ যখন resource create করতে হয় (example: ProviderContainer, mock object)
+➡️ Test environment clean রাখার জন্য।
+
+৩️⃣ যখন কোন stateful service, database, বা file open করা হয়
+➡️ tearDown() দিয়ে dispose বা close করতে হবে।
