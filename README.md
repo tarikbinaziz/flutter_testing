@@ -2,6 +2,11 @@
 
 A new Flutter project.
 
+// code generated via build_runner
+ flutter pub run build_runner build --delete-conflicting-outputs
+
+
+
 ## Getting Started
 
 🧪 What Is a Unit Test in Flutter?
