@@ -1,5 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test_flow/models/user_model.dart';
+
+final userServiceProvider = Provider<UserService>((ref) {
+  final dio = Dio(BaseOptions(baseUrl: 'https://api.example.com'));
+  return UserService(dio);
+});
 
 class UserService {
   final Dio dio;
