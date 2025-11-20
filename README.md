@@ -80,3 +80,24 @@ tearDown()	Test শেষ হওয়ার পরে clean-up করে।
 
 ৩️⃣ যখন কোন stateful service, database, বা file open করা হয়
 ➡️ tearDown() দিয়ে dispose বা close করতে হবে।
+
+
+
+# Commands summary
+
+Run all unit & widget tests:
+
+flutter test
+
+
+Run a single test:
+
+flutter test test/widget/login_screen_test.dart
+
+
+Run integration tests:
+
+flutter test integration_test/app_test.dart
+
+
+or use flutter drive if your setup requires it.
