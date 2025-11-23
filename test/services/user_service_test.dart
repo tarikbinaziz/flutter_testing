@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_test_flow/models/user_model.dart';
-import 'package:flutter_test_flow/unit_test/dio_api_service/services/user_service.dart';
+import 'package:flutter_testing_all/models/user_model.dart';
+import 'package:flutter_testing_all/unit_test/dio_api_service/services/user_service.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 
 void main() {

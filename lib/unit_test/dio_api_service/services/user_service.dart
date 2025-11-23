@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_test_flow/models/user_model.dart';
 import 'package:flutter_testing_all/models/user_model.dart';
 
 final userServiceProvider = Provider<UserService>((ref) {

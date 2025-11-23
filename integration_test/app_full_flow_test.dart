@@ -1,62 +1,55 @@
-import 'package:flutter_test/flutter_test.dart';
+// integration_test/app_full_flow_test.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_testing_all/main.dart' as app;
 import 'package:integration_test/integration_test.dart';
-import 'package:flutter_test_flow/main.dart' as app;
+
+import 'fake_provider_override.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Full App Flow Test: Splash → Login → Home', () {
-    testWidgets('User goes from splash to login and logs in successfully to reach home screen',
-        (WidgetTester tester) async {
-      // Start the app
-     app.main();
-      await tester.pumpAndSettle();
+  testWidgets('Splash → Login → Home (Fake Auth)', (tester) async {
+    // override providers with fake
+    await tester.pumpWidget(
+      ProviderScope(parent: testContainer, child: const app.MyApp()),
+    );
 
-      // -----------------------------
-      // 1️⃣ SPLASH SCREEN LOADED
-      // -----------------------------
-      expect(find.byKey(const Key('splash_logo')), findsOneWidget);
+    await tester.pumpAndSettle();
 
-      // Wait for splash to finish navigation
-      await tester.pump(const Duration(seconds: 3));
-      await tester.pumpAndSettle();
+    // -----------------------------
+    // 1️⃣ SPLASH SCREEN LOADED
+    // -----------------------------
+    expect(find.byKey(const Key('splash_logo')), findsOneWidget);
 
-      // -----------------------------
-      // 2️⃣ NAVIGATED TO LOGIN SCREEN
-      // -----------------------------
-      expect(find.byKey(const Key('login_email_field')), findsOneWidget);
-      expect(find.byKey(const Key('login_password_field')), findsOneWidget);
-      expect(find.byKey(const Key('login_button')), findsOneWidget);
+    // Wait for splash to finish navigation
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
 
-      // Enter email
-      await tester.enterText(
-        find.byKey(const Key('login_email_field')),
-        'demo@mail.com',
-      );
+    // -----------------------------
+    // 2️⃣ LOGIN SCREEN
+    // -----------------------------
+    expect(find.byKey(const Key('login_email')), findsOneWidget);
+    expect(find.byKey(const Key('login_password')), findsOneWidget);
+    expect(find.byKey(const Key('login_button')), findsOneWidget);
 
-      // Enter password
-      await tester.enterText(
-        find.byKey(const Key('login_password_field')),
-        '123456',
-      );
+    // Enter email & password
+    await tester.enterText(
+      find.byKey(const Key('login_email')),
+      'demo@mail.com',
+    );
+    await tester.enterText(find.byKey(const Key('login_password')), '123456');
+    await tester.pump();
 
-      await tester.pump();
+    // Tap login
+    await tester.tap(find.byKey(const Key('login_button')));
+    await tester.pumpAndSettle();
 
-      // Tap login button
-      await tester.tap(find.byKey(const Key('login_button')));
-      await tester.pump(const Duration(seconds: 1));
-
-      // Simulate waiting for network request
-      await tester.pumpAndSettle();
-
-      // -----------------------------
-      // 3️⃣ SUCCESS → GO TO HOME
-      // -----------------------------
-      expect(find.byKey(const Key('home_screen')), findsOneWidget);
-
-      // Home widgets
-      expect(find.text('Welcome Home!'), findsOneWidget);
-    });
+    // -----------------------------
+    // 3️⃣ HOME SCREEN
+    // -----------------------------
+    expect(find.byKey(const Key('home_screen')), findsOneWidget);
+    expect(find.text('Welcome Home!'), findsOneWidget);
   });
 }

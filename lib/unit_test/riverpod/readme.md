@@ -118,10 +118,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:flutter_test_flow/models/user_model.dart';
-import 'package:flutter_test_flow/unit_test/riverpod/controllers/user_controller.dart';
-import 'package:flutter_test_flow/unit_test/riverpod/states/user_state.dart';
-import 'package:flutter_test_flow/unit_test/riverpod/repositories/user_repository.dart';
+import 'package:flutter_testing_all/models/user_model.dart';
+import 'package:flutter_testing_all/unit_test/riverpod/controllers/user_controller.dart';
+import 'package:flutter_testing_all/unit_test/riverpod/states/user_state.dart';
+import 'package:flutter_testing_all/unit_test/riverpod/repositories/user_repository.dart';
 
 class MockUserRepository extends Mock implements UserRepository {}
 

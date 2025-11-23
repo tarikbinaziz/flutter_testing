@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_test_flow/unit_test/repository_layer/user_repository.dart';
+import 'package:flutter_testing_all/unit_test/repository_layer/user_repository.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:flutter_test_flow/models/user_model.dart';
-import 'package:flutter_test_flow/unit_test/dio_api_service/services/user_service.dart';
+import 'package:flutter_testing_all/models/user_model.dart';
+import 'package:flutter_testing_all/unit_test/dio_api_service/services/user_service.dart';
 
 class MockUserService extends Mock implements UserService {}
 

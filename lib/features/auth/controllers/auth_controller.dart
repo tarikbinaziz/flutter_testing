@@ -1,27 +1,44 @@
+// lib/full_test/controllers/auth_controller_provider.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_test_flow/full_test/dio_api_service/repositories/auth_repository.dart';
-import 'package:flutter_test_flow/full_test/domain/usecases/login_usecase.dart';
-import '../data/token_storage.dart';
-import '../domain/login_usecase.dart';
-import 'auth_state.dart';
+import 'package:flutter_testing_all/features/auth/controllers/auth_state.dart';
+import 'package:flutter_testing_all/features/auth/data/repositories/auth_repository.dart';
+import 'package:flutter_testing_all/features/auth/data/repositories/auth_repository_fake.dart';
+import 'package:flutter_testing_all/features/auth/data/repositories/auth_repository_real.dart';
+import 'package:flutter_testing_all/full_test/dio_api_service/repositories/auth_repository.dart';
+
+import 'auth_controller.dart';
+import 'package:flutter/foundation.dart'; // kDebugMode
+import 'package:dio/dio.dart';
+
+final authRepositoryProvider = Provider<AuthRepository>((ref) {
+  if (kDebugMode) {
+    return AuthRepositoryFake(); // development/test
+  } else {
+    final dio = Dio(BaseOptions(baseUrl: "https://api.yourapp.com"));
+    return AuthRepositoryReal(dio); // production
+  }
+});
+
+final authControllerProvider =
+    StateNotifierProvider<AuthController, AuthState>((ref) {
+  final repo = ref.watch(authRepositoryProvider);
+  return AuthController(repo);
+});
+
+
+
+
 
 class AuthController extends StateNotifier<AuthState> {
   final AuthRepository repo;
-  final TokenStorage tokenStorage;
-  final LoginUseCase loginUseCase;
 
-  AuthController(this.repo, this.tokenStorage, this.loginUseCase)
-      : super(const AuthState());
+  AuthController(this.repo) : super(const AuthState());
 
   Future<void> login(String email, String password) async {
     state = state.copyWith(loading: true, error: null);
-
     try {
-      final user = await loginUseCase(email, password);
-
-      // fake token
-      await tokenStorage.saveToken("dummy_token");
-
+      final user = await repo.login(email, password);
+      await repo.saveToken("token_from_login");
       state = state.copyWith(loading: false, user: user);
     } catch (e) {
       state = state.copyWith(loading: false, error: e.toString());
@@ -29,21 +46,12 @@ class AuthController extends StateNotifier<AuthState> {
   }
 
   Future<bool> checkAuth() async {
-    final token = await tokenStorage.getToken();
+    final token = await repo.getToken();
     return token != null;
   }
 
   Future<void> logout() async {
-    await tokenStorage.clearToken();
+    await repo.clearToken();
     state = const AuthState();
   }
 }
-
-final authControllerProvider =
-    StateNotifierProvider<AuthController, AuthState>((ref) {
-  final repo = ref.watch(authRepositoryProvider);
-  final tokenStore = ref.watch(tokenStorageProvider);
-  final loginUseCase = LoginUseCase(repo);
-
-  return AuthController(repo, tokenStore, loginUseCase);
-});

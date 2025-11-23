@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_test_flow/models/user_model.dart';
+import 'package:flutter_testing_all/models/user_model.dart';
 
 void main() {
   group('UserModel JSON Test', () {
