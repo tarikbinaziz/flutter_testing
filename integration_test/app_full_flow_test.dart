@@ -53,3 +53,9 @@ void main() {
     expect(find.text('Welcome Home!'), findsOneWidget);
   });
 }
+
+
+/*
+To run this integration test, use the following command in your terminal:
+ flutter test integration_test --device-id emulator-5554
+*/
