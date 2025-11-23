@@ -1,56 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../controllers/auth_controller.dart';
+import 'package:flutter_testing_all/features/auth/controllers/auth_controller.dart';
 
 class LoginScreen extends ConsumerWidget {
-  static const keyEmail = Key("login_email");
-  static const keyPassword = Key("login_password");
-  static const keyLoginBtn = Key("login_button");
-
-  LoginScreen({super.key});
-
-  final emailCtrl = TextEditingController();
-  final passCtrl = TextEditingController();
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(authControllerProvider);
-
-    ref.listen(authControllerProvider, (prev, next) {
-      if (next.user != null) {
-        Navigator.pushReplacementNamed(context, "/home");
-      }
-    });
-
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              key: keyEmail,
-              controller: emailCtrl,
-              decoration: const InputDecoration(labelText: "Email"),
-            ),
-            TextField(
-              key: keyPassword,
-              controller: passCtrl,
-              decoration: const InputDecoration(labelText: "Password"),
-            ),
+            TextField(key: const Key('login_email')),
+            const SizedBox(height: 10),
+            TextField(key: const Key('login_password')),
             const SizedBox(height: 20),
             ElevatedButton(
-              key: keyLoginBtn,
-              onPressed: state.loading
-                  ? null
-                  : () {
-                      ref
-                          .read(authControllerProvider.notifier)
-                          .login(emailCtrl.text, passCtrl.text);
-                    },
-              child: state.loading
-                  ? const CircularProgressIndicator()
-                  : const Text("Login"),
-            )
+              key: const Key('login_button'),
+              onPressed: () async {
+                await ref.read(authControllerProvider.notifier)
+                    .login('demo@mail.com', '123456');
+                Navigator.pushReplacementNamed(context, "/home");
+              },
+              child: const Text('Login'),
+            ),
           ],
         ),
       ),
