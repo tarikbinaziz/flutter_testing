@@ -1,14 +1,11 @@
 // lib/full_test/controllers/auth_controller_provider.dart
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart'; // kDebugMode
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_testing_all/features/auth/controllers/auth_state.dart';
 import 'package:flutter_testing_all/features/auth/data/repositories/auth_repository.dart';
 import 'package:flutter_testing_all/features/auth/data/repositories/auth_repository_fake.dart';
 import 'package:flutter_testing_all/features/auth/data/repositories/auth_repository_real.dart';
-import 'package:flutter_testing_all/full_test/dio_api_service/repositories/auth_repository.dart';
-
-import 'auth_controller.dart';
-import 'package:flutter/foundation.dart'; // kDebugMode
-import 'package:dio/dio.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   if (kDebugMode) {
@@ -19,15 +16,12 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   }
 });
 
-final authControllerProvider =
-    StateNotifierProvider<AuthController, AuthState>((ref) {
-  final repo = ref.watch(authRepositoryProvider);
-  return AuthController(repo);
-});
-
-
-
-
+final authControllerProvider = StateNotifierProvider<AuthController, AuthState>(
+  (ref) {
+    final repo = ref.watch(authRepositoryProvider);
+    return AuthController(repo);
+  },
+);
 
 class AuthController extends StateNotifier<AuthState> {
   final AuthRepository repo;
